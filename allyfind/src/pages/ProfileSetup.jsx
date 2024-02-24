@@ -14,12 +14,14 @@ import { auth } from '../config/firebase'
     { name: 'Focused', value: 'focused' },
     { name: 'Integrity', value: 'integrity' },
     { name: 'Responsibility', value: 'responsibility' },
-    { name: 'Adaptability', value: 'adaptability' },
+    { name: 'Positivity', value: 'positivity' },
   ];
 
   const [selectedQualities, setSelectedQualities] = useState([]);
   const [partnerSelectedQualities, setPartnerSelectedQualities] = useState([]);
-  const userId=auth.currentUser.uid
+  const userId=auth.currentUser.uid  
+  const [goal,setGoal] = useState('')
+
   const handleCheckboxChange = (value) => {
     if (selectedQualities.includes(value)) {
       setSelectedQualities(selectedQualities.filter((item) => item !== value));
@@ -75,6 +77,7 @@ try{
   } catch (err) {
     console.error(err);
   }
+    console.log('Your goal:',goal);
   };
   
 
@@ -83,6 +86,13 @@ try{
       <div className='user'>
       <h2>Tell us about yourself</h2>
       <form onSubmit={handleSubmit}>
+        <h3>What is your goal?</h3>
+        <input
+        type='text'
+        placeholder='eg: I want to be consistent with my 100DaysOfCode Challenge'
+        value={goal}
+        onChange={(e) =>setGoal(e.target.value)}>
+        </input>
         <h3>Your Qualities</h3>
         {qualities.map((quality) => (
           <div key={quality.value}>
