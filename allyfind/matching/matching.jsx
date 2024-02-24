@@ -32,28 +32,38 @@ import { firebase } from '../src/config/firebase'; // Import your Firebase confi
 // Function to calculate match score
 async function calculateMatchScore(currentUser, otherUser) {
   try {
-    // Fetch interests and goals arrays for the current user
-    const currentUserDetails = await firebase.firestore().collection('Details').doc(currentUser.id).get();
-    const currentUserInterests = currentUserDetails.data().interests;
-    const currentUserGoals = currentUserDetails.data().goals;
+    // Fetch quality array for the current user
+    const currentUserDetails = await firebase.firestore().collection('Details').doc(currentUser.id).get();    
 
-    // Fetch interests and goals arrays for the other user
+    if (currentUserDetails.exists) {
+      const partnerQualities = currentUserDetails.data().partnerQualities || [];
+      console.log('Partner Qualities:', partnerQualities);
+    } else {
+      console.log('Partner details not found.');
+    }
+
+    // Fetch quality array for the other user
     const otherUserDetails = await firebase.firestore().collection('Details').doc(otherUser.id).get();
-    const otherUserInterests = otherUserDetails.data().interests;
-    const otherUserGoals = otherUserDetails.data().goals;
+    if (otherUserDetails.exists) {      
+      const userQualities = otherUserDetails.data().userQualities || [];
+      console.log('User Qualities:', userQualities);
 
-    // Calculate shared interests and goals
-    const sharedInterests = currentUserInterests.filter(interest => otherUserInterests.includes(interest));
-    const sharedGoals = currentUserGoals.filter(goal => otherUserGoals.includes(goal));
+      // Calculate shared interests and goals
+      const commonQualities = userQualities.filter(quality => partnerQualities.includes(quality));
 
-    // Simple scoring: count the number of shared interests and goals
-    const matchScore = sharedInterests.length + sharedGoals.length;
-    return matchScore;
+      // Simple scoring: count the number of shared qualities
+      const matchScore = commonQualities.length;
+      return matchScore;
+    } else {
+      console.log('Other user details not found.');
+      return 0; // Return 0 if other user details are not found
+    }
   } catch (error) {
     console.error('Error calculating match score:', error);
     return 0; // Return 0 in case of an error
   }
 }
+
 
 // Function to find matches for a specific user
 async function findMatchesForUser(currentUser) {
