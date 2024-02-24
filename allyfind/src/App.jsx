@@ -1,13 +1,22 @@
+import { Route, Routes } from 'react-router-dom'
+import { Auth } from '../components/auth'
+import Interests  from './pages/ProfileSetup'
+import ProfileSetup from './pages/ProfileSetup'
 
 import './App.css'
-import {Auth} from '../components/auth'
 function App() {
-  
-  return (    
-      <div>
-      <Auth/>
-      </div>
+  return(
+    <div className='app'>
+      
+    <Routes>
+      <Route path="/" element={<Auth/>} />
+      <Route path="/details" element={<Interests/>}/>
+      <Route path="/profile" element={<ProfileSetup/>}/>
+    </Routes>
+    </div>
   )
+  
 }
 
 export default App
+
