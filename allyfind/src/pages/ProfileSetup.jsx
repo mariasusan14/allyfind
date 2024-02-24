@@ -3,7 +3,7 @@ import { db } from '../config/firebase';
 import { collection,addDoc } from 'firebase/firestore';
 import { auth } from '../config/firebase'
 
-function ProfileSetup() {
+ function ProfileSetup() {
   const qualities = [
     { name: 'Empathy', value: 'empathy' },
     { name: 'Punctual', value: 'punctual' },

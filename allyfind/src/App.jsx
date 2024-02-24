@@ -10,7 +10,7 @@ function App() {
       
     <Routes>
       <Route path="/" element={<Auth/>} />
-      <Route path="/profile" element={<ProfileSetup/>}/>
+      <Route path="/profile/:userId" element={<ProfileSetup/>}/>
       {/*<Route path="/dashboard" element={<Dashboard/>}/>*/}
       <Route path="/dashboard/:userId" element={<Dashboard />} />
     </Routes>
