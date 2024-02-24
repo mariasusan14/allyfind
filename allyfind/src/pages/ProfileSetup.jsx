@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { db } from '../config/firebase';
+import { collection,addDoc } from 'firebase/firestore';
+import { auth } from '../config/firebase'
 
 function ProfileSetup() {
   const qualities = [
@@ -59,6 +62,19 @@ function ProfileSetup() {
     storePartnerArray();
     console.log('Your Qualities:', selectedQualities); //do backend
     console.log('Partner Qualities:', partnerSelectedQualities); 
+    console.log(currentUser.uId);
+    const detailsRef=collection(db,details);
+try{
+    await addDoc(detailsRef, {
+      userId: auth.currentUser.uid,
+      userQualities: selectedQualities,
+      partnerQualities: partnerSelectedQualities,
+      //userId: auth?.currentUser?.uid,
+    });
+    
+  } catch (err) {
+    console.error(err);
+  }
   };
   
 

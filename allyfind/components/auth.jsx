@@ -1,5 +1,7 @@
 import { useState } from "react"
+
 import {createUserWithEmailAndPassword,signOut,signInWithEmailAndPassword} from "firebase/auth"
+
 import { auth } from "../src/config/firebase"
 
 export const Auth=()=>{
@@ -48,4 +50,6 @@ export const Auth=()=>{
         </div>
     )
 }
+
+
 
