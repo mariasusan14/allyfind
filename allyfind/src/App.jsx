@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
 import { Auth } from '../components/auth'
-import Interests  from './pages/ProfileSetup'
 import ProfileSetup from './pages/ProfileSetup'
 
 import './App.css'
