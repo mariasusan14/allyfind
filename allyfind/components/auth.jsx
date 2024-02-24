@@ -2,8 +2,18 @@ import { useState } from "react"
 import {createUserWithEmailAndPassword,signOut} from "firebase/auth"
 import { auth } from "../src/config/firebase"
 export const Auth=()=>{
+    const userref=collection(db,"user")
+    const detailsref=collection(db,"details")
     const[email,setEmail]=useState("")
     const[password,setPassword]=useState("")
+
+    const submitUser=async()=>{
+        try{
+          await addDoc(userref,{email:email,password:password})
+        } catch(e){
+          console.error(e)
+        }    
+      }
     const signin=async()=>{
         try{
             await createUserWithEmailAndPassword(auth,email,password)

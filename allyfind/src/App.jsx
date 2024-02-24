@@ -3,8 +3,7 @@ import './App.css'
 import {Auth} from '../components/auth'
 function App() {
   
-  return (
-    
+  return (    
       <div>
       <Auth/>
       </div>
