@@ -16,7 +16,7 @@ function ProfileSetup() {
 
   const [selectedQualities, setSelectedQualities] = useState([]);
   const [partnerSelectedQualities, setPartnerSelectedQualities] = useState([]);
-
+  const userId=auth.currentUser.uid
   const handleCheckboxChange = (value) => {
     if (selectedQualities.includes(value)) {
       setSelectedQualities(selectedQualities.filter((item) => item !== value));
@@ -32,12 +32,35 @@ function ProfileSetup() {
       setPartnerSelectedQualities([...partnerSelectedQualities, value]);
     }
   };
+  const storeUserArray = async () => {
+    try {
+      const userDocRef = doc(db, 'details', userId); 
+      await setDoc(userDocRef, { userQualities: selectedQualities }, { merge: true });
+  
+      console.log('Array stored successfully!');
+    } catch (error) {
+      console.error('Error storing array:', error);
+    }
+  };
+  const storePartnerArray = async () => {
+    try {
+      const userDocRef = doc(db, 'details', userId); 
+      await setDoc(userDocRef, { partnerQualities: partnerSelectedQualities }, { merge: true });
+  
+      console.log('Array stored successfully!');
+    } catch (error) {
+      console.error('Error storing array:', error);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    storeUserArray();
+    storePartnerArray();
     console.log('Your Qualities:', selectedQualities); //do backend
     console.log('Partner Qualities:', partnerSelectedQualities); 
   };
+  
 
   return (
     <div>
