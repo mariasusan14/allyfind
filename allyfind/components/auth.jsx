@@ -44,6 +44,7 @@ export const Auth=()=>{
             console.error(e)
         }        
     }
+   
     const login = async () => {
         try {
             // Sign in the user using Firebase Authentication
