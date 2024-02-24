@@ -1,23 +1,17 @@
 import { useState } from "react"
-import {createUserWithEmailAndPassword,signOut,signInWithEmailAndPassword} from "firebase/auth"
-import { auth } from "../src/config/firebase"
-import { collection, addDoc } from "firebase/firestore";
-import { db } from '../src/config/firebase';
+import {createUserWithEmailAndPassword,signOut} from "firebase/auth"
+import { auth } from "../config/firebase"
 export const Auth=()=>{
-    const userref=collection(db,"user")
-    const detailsref=collection(db,"details")
     const[email,setEmail]=useState("")
     const[password,setPassword]=useState("")
-
-    const submitUser=async()=>{
+    const signin=async()=>{
         try{
-            const userDocRef = await addDoc(userref, { email: email, password: password });            
-            await createUserWithEmailAndPassword(auth, email, password);
-        } catch(e){
-          console.error(e)
-        }    
-      }
-    
+            await createUserWithEmailAndPassword(auth,email,password)
+        }
+        catch(e){
+            console.error(e)
+        }        
+    }
     const logout=async()=>{
         try{
             await signOut(auth)
@@ -25,17 +19,6 @@ export const Auth=()=>{
         catch(e){
             console.error(e)
         }        
-    }
-    const login = async () => {
-        try {
-            // Sign in the user using Firebase Authentication
-            await signInWithEmailAndPassword(auth, email, password);
-
-            // Additional actions after successful login
-            console.log("User logged in successfully!");
-        } catch (e) {
-            console.error(e);
-        }
     }
     return(
         <div>
@@ -47,9 +30,9 @@ export const Auth=()=>{
                 placeholder="password..."
                 onChange={(e)=>setPassword(e.target.value)}
                 />
-            <button onClick={submitUser}>Sign up</button>
-            <button onClick={login}>Login</button>
+            <button onClick={signin}>Sign in</button>
             <button onClick={logout}>Sign out</button>
         </div>
     )
 }
+
