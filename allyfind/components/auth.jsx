@@ -11,7 +11,8 @@ export const Auth=()=>{
 
     const submitUser=async()=>{
         try{
-          await addDoc(userref,{email:email,password:password})
+            const userDocRef = await addDoc(userref, { email: email, password: password });            
+            await createUserWithEmailAndPassword(auth, email, password);
         } catch(e){
           console.error(e)
         }    
@@ -42,7 +43,7 @@ export const Auth=()=>{
                 placeholder="password..."
                 onChange={(e)=>setPassword(e.target.value)}
                 />
-            <button onClick={signin}>Sign in</button>
+            <button onClick={submitUser}>Sign up</button>
             <button onClick={logout}>Sign out</button>
         </div>
     )
