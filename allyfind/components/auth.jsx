@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {createUserWithEmailAndPassword,signOut} from "firebase/auth"
+import {createUserWithEmailAndPassword,signOut,signInWithEmailAndPassword} from "firebase/auth"
 import { auth } from "../src/config/firebase"
 import { collection, addDoc } from "firebase/firestore";
 import { db } from '../src/config/firebase';
@@ -17,14 +17,7 @@ export const Auth=()=>{
           console.error(e)
         }    
       }
-    const signin=async()=>{
-        try{
-            await createUserWithEmailAndPassword(auth,email,password)
-        }
-        catch(e){
-            console.error(e)
-        }        
-    }
+    
     const logout=async()=>{
         try{
             await signOut(auth)
@@ -32,6 +25,17 @@ export const Auth=()=>{
         catch(e){
             console.error(e)
         }        
+    }
+    const login = async () => {
+        try {
+            // Sign in the user using Firebase Authentication
+            await signInWithEmailAndPassword(auth, email, password);
+
+            // Additional actions after successful login
+            console.log("User logged in successfully!");
+        } catch (e) {
+            console.error(e);
+        }
     }
     return(
         <div>
@@ -44,6 +48,7 @@ export const Auth=()=>{
                 onChange={(e)=>setPassword(e.target.value)}
                 />
             <button onClick={submitUser}>Sign up</button>
+            <button onClick={login}>Login</button>
             <button onClick={logout}>Sign out</button>
         </div>
     )
