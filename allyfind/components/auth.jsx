@@ -2,7 +2,7 @@ import { useState } from "react"
 import {createUserWithEmailAndPassword,signOut} from "firebase/auth"
 import { auth } from "../src/config/firebase"
 import { collection, addDoc } from "firebase/firestore";
-import { db } from './config/firebase';
+import { db } from '../src/config/firebase';
 export const Auth=()=>{
     const userref=collection(db,"user")
     const detailsref=collection(db,"details")
