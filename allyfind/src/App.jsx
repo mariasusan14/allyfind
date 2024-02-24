@@ -10,7 +10,6 @@ function App() {
       
     <Routes>
       <Route path="/" element={<Auth/>} />
-      <Route path="/details" element={<Interests/>}/>
       <Route path="/profile" element={<ProfileSetup/>}/>
     </Routes>
     </div>
