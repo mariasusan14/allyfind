@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom'
 import { Auth } from '../components/auth'
-import Interests  from './pages/ProfileSetup'
 import ProfileSetup from './pages/ProfileSetup'
-
+import { Dashboard } from '../components/dashboard'
 import './App.css'
+
 function App() {
   return(
     <div className='app'>
@@ -11,6 +11,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Auth/>} />
       <Route path="/profile" element={<ProfileSetup/>}/>
+      {/*<Route path="/dashboard" element={<Dashboard/>}/>*/}
+      <Route path="/dashboard/:userId" element={<Dashboard />} />
     </Routes>
     </div>
   )

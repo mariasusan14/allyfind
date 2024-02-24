@@ -56,7 +56,7 @@ function ProfileSetup() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     storeUserArray();
     storePartnerArray();
