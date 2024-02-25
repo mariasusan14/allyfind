@@ -1,6 +1,6 @@
 
 
- function calculateMatchScore(user1, user2) {
+ /*function calculateMatchScore(user1, user2) {
   const sharedInterests = user1.interests.filter(interest => user2.interests.includes(interest));
   const sharedGoals = user1.goals.filter(goal => user2.goals.includes(goal));
 
@@ -26,3 +26,4 @@ export function findMatches(currentUser, allUsers) {
 
   return matches;
 }
+*/

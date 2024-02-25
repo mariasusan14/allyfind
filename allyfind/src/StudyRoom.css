@@ -1,0 +1,85 @@
+.study-room {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px;
+}
+
+.study-room h1 {
+  color: #333;
+  text-align: center;
+}
+
+.todo-lists {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.todo-list {
+  width: 45%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.todo-list h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.study-tools {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.study-tools h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Styling for Pomodoro Timer */
+.pomodoro-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer-display {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: space-around;
+}
+
+.timer-controls button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.timer-controls button:hover {
+  background-color: #0056b3;
+}
+.auth-button {
+  width: 100%;
+  padding: 8px; /* Decrease the padding */
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 14px; /* Decrease the font size */
+  cursor: pointer;
+}
+
+.auth-button.small {
+  padding: 6px; /* Decrease the padding */
+  font-size: 12px; /* Decrease the font size */
+}

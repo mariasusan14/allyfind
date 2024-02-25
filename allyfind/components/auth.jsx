@@ -4,6 +4,7 @@ import {createUserWithEmailAndPassword,signOut,signInWithEmailAndPassword} from 
 import { collection,addDoc } from "@firebase/firestore";
 //import { Dashboard } from "./dashboard";
 import { auth,db } from "../src/config/firebase"
+import '../src/Auth.css'
 export const Auth=()=>{
     const[email,setEmail]=useState("")
     const[password,setPassword]=useState("")
@@ -69,6 +70,7 @@ export const Auth=()=>{
             <input 
                 placeholder="password..."
                 onChange={(e)=>setPassword(e.target.value)}
+                type="password"
                 />
             <button onClick={submitUser}>Sign up</button>
             <button onClick={login}>Login</button>

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { db } from '../config/firebase';
-import { collection,addDoc } from 'firebase/firestore';
+import { collection,addDoc,doc,setDoc } from 'firebase/firestore';
 import { auth } from '../config/firebase'
+import { useNavigate } from 'react-router-dom';
 
- function ProfileSetup() {
+export function ProfileSetup() {
   const qualities = [
     { name: 'Empathy', value: 'empathy' },
     { name: 'Punctual', value: 'punctual' },
@@ -20,6 +21,8 @@ import { auth } from '../config/firebase'
   const [selectedQualities, setSelectedQualities] = useState([]);
   const [partnerSelectedQualities, setPartnerSelectedQualities] = useState([]);
   const userId=auth.currentUser.uid  
+  const navigate=useNavigate();
+  console.log(auth.currentUser.uid)
   const [goal,setGoal] = useState('')
 
   const handleCheckboxChange = (value) => {
@@ -28,6 +31,7 @@ import { auth } from '../config/firebase'
     } else {
       setSelectedQualities([...selectedQualities, value]);
     }
+    
   };
 
   const handlePartnerCheckboxChange = (value) => {
@@ -60,27 +64,26 @@ import { auth } from '../config/firebase'
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    storeUserArray();
-    storePartnerArray();
-    console.log('Your Qualities:', selectedQualities); //do backend
-    console.log('Partner Qualities:', partnerSelectedQualities); 
-    console.log(currentUser.uId);
-    const detailsRef=collection(db,details);
+    //storeUserArray();
+    //storePartnerArray();
+  
+    
+    const detailsRef=collection(db,"details");
 try{
     await addDoc(detailsRef, {
       userId: auth.currentUser.uid,
       userQualities: selectedQualities,
       partnerQualities: partnerSelectedQualities,
-      //userId: auth?.currentUser?.uid,
+      
     });
-    
+    console.log('Your goal:',goal);
+    navigate(`/matchfound/${auth.currentUser.uid}`);
   } catch (err) {
     console.error(err);
   }
-    console.log('Your goal:',goal);
+    
   };
   
-
   return (
     <div>
       <div className='user'>
@@ -132,9 +135,9 @@ try{
        
       </form>
       </div>
-      <button type="submit" onClick={handleSubmit}>Submit</button>
+      
+        <button onClick={handleSubmit}>Submit</button>
+    
     </div>
   );
-}
-
-export default ProfileSetup;
+        }

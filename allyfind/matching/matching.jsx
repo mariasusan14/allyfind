@@ -1,98 +1,84 @@
-/*import React, { useEffect, useState } from 'react';
-import {  findMatches } from './matchingAlgorithm';
+import { useState, useEffect } from 'react';
+import { db, auth } from '../src/config/firebase';
+import { getDocs } from '@firebase/firestore';
+//import { getDoc, collection } from 'firebase/firestore';
 
-const Dashboard = ({ currentUser, allUsers }) => {
-  const [matches, setMatches] = useState([]);
+
+  /*const [bestMatch, setBestMatch] = useState(null);
+
+  const findBestMatch = async () => {
+    try {
+      const userId = auth.currentUser.uid;
+
+      // Step 1: Retrieve Current User Details using getDoc
+      const currentUserDetailsRef = collection(db, 'details', userId);
+      const currentUserDetailsSnap = await getDoc(currentUserDetailsRef);
+      const currentUserDetails = currentUserDetailsSnap.data();
+      const currentUserQualities = currentUserDetails.partnerQualities;
+      
+      // Step 2: Find Potential Partners using getDoc
+      const potentialPartnersSnapshot = await getDoc(collection(db, 'details'));
+
+      // Step 3: Calculate Matching Scores
+      let bestMatchUserId = null;
+      let maxMatchingScore = 0;
+
+      potentialPartnersSnapshot.forEach(partnerDoc => {
+        const partnerQualities = partnerDoc.data().userQualities;
+
+        // Step 4: Calculate Matching Score
+        const intersection = currentUserQualities.filter(quality => partnerQualities.includes(quality));
+        const matchingScore = intersection.length;
+        // Step 5: Find the Best Match
+        if (matchingScore > maxMatchingScore) {
+          maxMatchingScore = matchingScore;
+          bestMatchUserId = partnerDoc.data().userId;
+        }
+      });
+
+      setBestMatch(bestMatchUserId);
+    } catch (error) {
+      console.error('Error finding the best match:', error);
+    }
+  };
 
   useEffect(() => {
-    // Calculate and set matches when currentUser or allUsers change
-    const userMatches = findMatches(currentUser, allUsers);
-    setMatches(userMatches);
-  }, [currentUser, allUsers]);
+    findBestMatch();
+  }, []); // Empty dependency array ensures that the effect runs only once after the component mounts
 
+  const handleGoToStudyRoom = () => {
+    // Add logic to navigate to the study room or perform other actions
+    console.log('Navigating to study room for:', bestMatch);
+  }; */
+export const CalculateMatchScore = () => {
+    const [userIds, setUserIds] = useState([]);
+    const detailsref=collection(db,'details');
+    useEffect(() => {
+      const fetchUserIds = async () => {
+        try {
+          const detailsSnapshot = await getDocs(detailsref);
+          const userIdsData = detailsSnapshot.docs.map((doc) => ({
+             ...doc.data().userId,
+             id: doc.id
+          }));
+          setUserIds(userIdsData);
+        } catch (error) {
+          console.error('Error fetching userIds:', error);
+        }
+      };
+  
+      fetchUserIds();
+    }, [detailsref]);
+   const bestMatch=userIds[2];
   return (
     <div>
-      <h2>Your Matches</h2>
-      <ul>
-        {matches.map(({ user, matchScore }) => (
-          <li key={user.id}>
-            {user.name} - Match Score: {matchScore}
-          </li>
-        ))}
-      </ul>
+      {userIds.map((ids)=>{
+        <div>
+          <h1>{ids.user.Id}</h1>
+        </div>
+      })}
     </div>
   );
-};
+      }
 
-export default Dashboard;
-*/
-
-import { firebase } from '../src/config/firebase'; // Import your Firebase configuration
-
-// Function to calculate match score
-async function calculateMatchScore(currentUser, otherUser) {
-  try {
-    // Fetch quality array for the current user
-    const currentUserDetails = await firebase.firestore().collection('Details').doc(currentUser.id).get();    
-
-    if (currentUserDetails.exists) {
-      const partnerQualities = currentUserDetails.data().partnerQualities || [];
-      console.log('Partner Qualities:', partnerQualities);
-    } else {
-      console.log('Partner details not found.');
-    }
-
-    // Fetch quality array for the other user
-    const otherUserDetails = await firebase.firestore().collection('Details').doc(otherUser.id).get();
-    if (otherUserDetails.exists) {      
-      const userQualities = otherUserDetails.data().userQualities || [];
-      console.log('User Qualities:', userQualities);
-
-      // Calculate shared interests and goals
-      const commonQualities = userQualities.filter(quality => partnerQualities.includes(quality));
-
-      // Simple scoring: count the number of shared qualities
-      const matchScore = commonQualities.length;
-      return matchScore;
-    } else {
-      console.log('Other user details not found.');
-      return 0; // Return 0 if other user details are not found
-    }
-  } catch (error) {
-    console.error('Error calculating match score:', error);
-    return 0; // Return 0 in case of an error
-  }
-}
-
-
-// Function to find matches for a specific user
-async function findMatchesForUser(currentUser) {
-  try {
-    // Fetch all users from Firestore
-    const usersSnapshot = await firebase.firestore().collection('Users').get();
-    const allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-    // Calculate match scores for each user
-    const matches = await Promise.all(
-      allUsers
-        .filter(user => user.id !== currentUser.id)
-        .map(async user => ({ user, matchScore: await calculateMatchScore(currentUser, user) }))
-    );
-
-    // Sort users based on match score in descending order
-    return matches.sort((a, b) => b.matchScore - a.matchScore);
-  } catch (error) {
-    console.error('Error finding matches for user:', error);
-    return [];
-  }
-}
-
-// Example usage
-const currentUser = {
-  id: 'currentUserId',
-  // ... other user properties
-};
-
-findMatchesForUser(currentUser).then(matches => {
-  console.log('Matches for the current user:', matches);
-});
+    
