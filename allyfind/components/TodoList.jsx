@@ -10,9 +10,8 @@ function TodoList() {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        // Fetch goals for the current user
         const goalsSnapshot = await db.collection('goals').where('userId', '==', auth.currentUser.uid).get();
-        const goalsData = goalsSnapshot.docs.map(doc => doc.data().goal);
+        const goalsData = goalsSnapshot.docs.map(doc => ({ id: doc.id, goal: doc.data().goal }));
         setTasks(goalsData);
       } catch (error) {
         console.error('Error fetching goals:', error);
@@ -25,51 +24,64 @@ function TodoList() {
   const addTask = async () => {
     if (newTask.trim() !== '') {
       // Update goals in the state
-      setTasks([...tasks, newTask]);
+      setTasks([...tasks, { id: null, goal: newTask }]);
 
       // Update goals in the database
-      await db.collection('goals').add({
-        userId: auth.currentUser.uid,
-        goal: newTask,
-      });
+      try {
+        const docRef = await db.collection('goals').add({
+          userId: auth.currentUser.uid,
+          goal: newTask,
+        });
+        // Update the task's id in the state
+        const updatedTasks = tasks.map(task => {
+          if (task.goal === newTask) {
+            return { ...task, id: docRef.id };
+          }
+          return task;
+        });
+        setTasks(updatedTasks);
+      } catch (error) {
+        console.error('Error adding goal to database:', error);
+      }
 
       setNewTask('');
     }
   };
 
-  const deleteTask = async (index) => {
+  const deleteTask = async (id) => {
     // Update goals in the state
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
+    const updatedTasks = tasks.filter(task => task.id !== id);
     setTasks(updatedTasks);
 
     // Delete goal from the database
-    const goalsSnapshot = await db.collection('goals').where('userId', '==', auth.currentUser.uid).get();
-    goalsSnapshot.forEach(doc => {
-      if (doc.data().goal === tasks[index]) {
-        doc.ref.delete();
-      }
-    });
+    try {
+      await db.collection('goals').doc(id).delete();
+    } catch (error) {
+      console.error('Error deleting goal from database:', error);
+    }
   };
 
   const editTask = (index) => {
     setEditIndex(index);
-    setEditedTask(tasks[index]);
+    setEditedTask(tasks[index].goal);
   };
 
-  const updateTask = async () => {
+  const updateTask = async (id) => {
     // Update goals in the state
-    const updatedTasks = [...tasks];
-    updatedTasks[editIndex] = editedTask;
+    const updatedTasks = tasks.map(task => {
+      if (task.id === id) {
+        return { ...task, goal: editedTask };
+      }
+      return task;
+    });
     setTasks(updatedTasks);
 
     // Update goal in the database
-    const goalsSnapshot = await db.collection('goals').where('userId', '==', auth.currentUser.uid).get();
-    goalsSnapshot.forEach(doc => {
-      if (doc.data().goal === tasks[editIndex]) {
-        doc.ref.update({ goal: editedTask });
-      }
-    });
+    try {
+      await db.collection('goals').doc(id).update({ goal: editedTask });
+    } catch (error) {
+      console.error('Error updating goal in database:', error);
+    }
 
     setEditIndex(null);
     setEditedTask('');
@@ -86,7 +98,7 @@ function TodoList() {
       <button onClick={addTask}>Add Goal</button>
       <ul>
         {tasks.map((task, index) => (
-          <li key={index}>
+          <li key={task.id}>
             {editIndex === index ? (
               <>
                 <input
@@ -94,13 +106,13 @@ function TodoList() {
                   value={editedTask}
                   onChange={(e) => setEditedTask(e.target.value)}
                 />
-                <button onClick={updateTask}>Update</button>
+                <button onClick={() => updateTask(task.id)}>Update</button>
               </>
             ) : (
               <>
-                {task}
+                {task.goal}
                 <button onClick={() => editTask(index)}>Edit</button>
-                <button onClick={() => deleteTask(index)}>Delete</button>
+                <button onClick={() => deleteTask(task.id)}>Delete</button>
               </>
             )}
           </li>

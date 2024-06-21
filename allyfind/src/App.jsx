@@ -6,12 +6,15 @@ import './App.css'
 import { MatchFound } from '../matching/matchfound'
 import About from '../components/About'
 import StudyRoom from './pages/StudyRoom'
+import Home from '../components/Home'
+import './landing.css'
 
 function App() {
   return(
     <div className='app'>
       
     <Routes>
+      <Route path='/' element={<Home/>}/>
       <Route path="/auth" element={<Auth/>} />
       <Route path="/profile/:userId" element={<ProfileSetup/>}/>
       {/*<Route path="/dashboard" element={<Dashboard/>}/>*/}

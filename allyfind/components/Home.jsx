@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 import  BannerBackground from "../components/assets/bannerbackground.png"
 import  BannerImage from "../components/assets/bannerimage.png";
 import {FiArrowRight} from "react-icons/fi";
-import '../src/styles/Home.css'
+import '../src/Home.css'
 import { Link } from 'react-router-dom';
 
 const Home = () =>{
